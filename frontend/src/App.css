@@ -1,0 +1,441 @@
+/* ══════════════════════════════════════════════════════════════
+   RFQ British Auction — Stylesheet
+   Clean, minimal design.  No frameworks, just plain CSS.
+   ══════════════════════════════════════════════════════════════ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  background: #f5f6fa;
+  color: #1e293b;
+  line-height: 1.6;
+}
+
+/* ── Header / Nav ─────────────────────────────────────────── */
+
+.app-header {
+  background: #1e293b;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  height: 56px;
+}
+
+.app-header .logo {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #fff;
+  text-decoration: none;
+}
+
+.app-header nav a {
+  color: #cbd5e1;
+  text-decoration: none;
+  margin-left: 1.5rem;
+  font-size: 0.9rem;
+  transition: color 0.15s;
+}
+.app-header nav a:hover {
+  color: #fff;
+}
+
+/* ── Main content area ─────────────────────────────────────── */
+
+.main-content {
+  max-width: 1100px;
+  margin: 2rem auto;
+  padding: 0 1.5rem;
+}
+
+/* ── Page header (title + button row) ──────────────────────── */
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+/* ── Buttons ───────────────────────────────────────────────── */
+
+.btn-primary {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  padding: 0.55rem 1.4rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: background 0.15s;
+}
+.btn-primary:hover {
+  background: #1d4ed8;
+}
+.btn-primary:disabled {
+  background: #93c5fd;
+  cursor: not-allowed;
+}
+
+.btn-link {
+  color: #2563eb;
+  text-decoration: none;
+  font-size: 0.88rem;
+  font-weight: 500;
+}
+.btn-link:hover {
+  text-decoration: underline;
+}
+
+/* ── Tables ────────────────────────────────────────────────── */
+
+.table-wrapper {
+  overflow-x: auto;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+thead {
+  background: #f8fafc;
+}
+th {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 2px solid #e2e8f0;
+}
+td {
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+tbody tr:hover {
+  background: #f8fafc;
+}
+.bold {
+  font-weight: 600;
+}
+
+.l1-row {
+  background: #f0fdf4;
+}
+
+/* ── Status badge ──────────────────────────────────────────── */
+
+.status-badge {
+  display: inline-block;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.2rem 0.7rem;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.status-badge.large {
+  font-size: 0.85rem;
+  padding: 0.3rem 1rem;
+}
+
+/* ── Rank badge ────────────────────────────────────────────── */
+
+.rank-badge {
+  display: inline-block;
+  width: 32px;
+  text-align: center;
+  padding: 0.15rem 0;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  background: #e2e8f0;
+  color: #475569;
+}
+.rank-1 {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+/* ── Forms ──────────────────────────────────────────────────── */
+
+.form-container {
+  max-width: 720px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.form-subtitle {
+  color: #64748b;
+  margin-bottom: 1.5rem;
+}
+
+.form-section {
+  margin-bottom: 1.5rem;
+}
+.form-section h3 {
+  font-size: 1rem;
+  margin-bottom: 0.8rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid #e2e8f0;
+  color: #334155;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-group label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #475569;
+  margin-bottom: 0.3rem;
+}
+
+.form-group input,
+.form-group select {
+  padding: 0.5rem 0.7rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  color: #1e293b;
+  transition: border-color 0.15s;
+}
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+
+.hint {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin-top: 0.25rem;
+}
+
+/* ── Error / Success boxes ─────────────────────────────────── */
+
+.error-box {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  font-size: 0.88rem;
+  margin-bottom: 1rem;
+}
+
+.success-box {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  font-size: 0.88rem;
+  margin-bottom: 1rem;
+}
+
+/* ── Loading / empty states ────────────────────────────────── */
+
+.loading {
+  text-align: center;
+  color: #64748b;
+  padding: 3rem 0;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  background: #fff;
+  border-radius: 8px;
+  color: #64748b;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.muted {
+  color: #94a3b8;
+  font-style: italic;
+}
+
+/* ── Detail page ───────────────────────────────────────────── */
+
+.detail-page {
+  max-width: 1000px;
+}
+
+.detail-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+.detail-header h2 {
+  margin-bottom: 0.2rem;
+}
+.ref-id {
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+/* info cards row */
+.info-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.info-card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.2rem 1.4rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+.info-card h4 {
+  font-size: 0.88rem;
+  color: #475569;
+  margin-bottom: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.35rem 0;
+  font-size: 0.88rem;
+}
+.info-row span:first-child {
+  color: #64748b;
+}
+.info-row.highlight {
+  background: #eff6ff;
+  padding: 0.4rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+/* ── Sections ──────────────────────────────────────────────── */
+
+.section {
+  margin-bottom: 1.5rem;
+}
+.section h3 {
+  font-size: 1.05rem;
+  margin-bottom: 1rem;
+  color: #1e293b;
+}
+
+/* ── Bid form on detail page ───────────────────────────────── */
+
+.bid-form-section {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.4rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.bid-total {
+  margin: 1rem 0 0.5rem;
+  font-size: 0.95rem;
+  color: #334155;
+}
+
+/* ── Activity log ──────────────────────────────────────────── */
+
+.activity-log {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  padding: 0.5rem 0;
+}
+
+.log-entry {
+  display: flex;
+  align-items: flex-start;
+  padding: 0.8rem 1.2rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+.log-entry:last-child {
+  border-bottom: none;
+}
+
+.log-icon {
+  font-size: 1.3rem;
+  margin-right: 0.8rem;
+  margin-top: 0.1rem;
+}
+
+.log-content {
+  flex: 1;
+}
+
+.log-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.2rem;
+}
+
+.log-type {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #334155;
+}
+
+.log-time {
+  font-size: 0.78rem;
+  color: #94a3b8;
+}
+
+.log-desc {
+  font-size: 0.87rem;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+/* highlight extension events */
+.log-time_extended {
+  background: #fffbeb;
+}
+
+/* ── Responsive ────────────────────────────────────────────── */
+
+@media (max-width: 700px) {
+  .form-grid,
+  .info-cards {
+    grid-template-columns: 1fr;
+  }
+  .app-header {
+    padding: 0 1rem;
+  }
+}
