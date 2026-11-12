@@ -21,10 +21,10 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# allow the React dev server to talk to the API
+# Allow all origins or production domain
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
