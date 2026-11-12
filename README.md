@@ -6,6 +6,13 @@ Suppliers compete by submitting bids on RFQs. If bidding activity occurs near th
 
 ---
 
+## 🌐 Live Demo & Deployment
+
+- **Live Web Application:** [https://rfq-british-frontend.onrender.com](https://rfq-british-frontend.onrender.com)
+- **Backend API & Swagger Docs:** [https://rfq-auction-backend.onrender.com/docs](https://rfq-auction-backend.onrender.com/docs)
+
+---
+
 ## Features
 
 - **Create RFQs** with configurable British Auction settings (trigger window, extension duration, trigger type)
