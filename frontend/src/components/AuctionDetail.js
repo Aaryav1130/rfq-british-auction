@@ -53,7 +53,7 @@ function AuctionDetail() {
 
   return (
     <div className="detail-page">
-      {/* ── RFQ header info ─────────────────────────────────── */}
+      {/* RFQ header info */}
       <div className="detail-header">
         <div>
           <h2>{rfq.name}</h2>
@@ -74,7 +74,7 @@ function AuctionDetail() {
         </span>
       </div>
 
-      {/* ── Time and config info ────────────────────────────── */}
+      {/* Time and configuration */}
       <div className="info-cards">
         <div className="info-card">
           <h4>Schedule</h4>
@@ -117,12 +117,12 @@ function AuctionDetail() {
         </div>
       </div>
 
-      {/* ── Bid submission (only when auction is active) ──── */}
+      {/* Bid form (active auction only) */}
       {isActive && (
         <BidForm rfqId={rfq.id} onBidSubmitted={loadDetail} />
       )}
 
-      {/* ── Supplier bids / rankings ────────────────────────── */}
+      {/* Supplier bids / rankings */}
       <div className="section">
         <h3>Supplier Bids &amp; Rankings</h3>
         {bids.length === 0 ? (
@@ -167,7 +167,7 @@ function AuctionDetail() {
         )}
       </div>
 
-      {/* ── Activity log ────────────────────────────────────── */}
+      {/* Activity log */}
       <ActivityLog logs={activity_logs} />
     </div>
   );

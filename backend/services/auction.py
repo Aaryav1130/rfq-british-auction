@@ -68,7 +68,7 @@ def process_new_bid(db: Session, rfq: RFQ, new_bid: Bid):
     """
     now = datetime.now(timezone.utc)
 
-    # ── 1. snapshot old state ──────────────────────────────────────────
+    # 1. snapshot old rankings
     old_bids = (
         db.query(Bid)
         .filter(Bid.rfq_id == rfq.id, Bid.id != new_bid.id)
@@ -78,7 +78,7 @@ def process_new_bid(db: Session, rfq: RFQ, new_bid: Bid):
     old_l1_id = old_bids[0].id if old_bids else None
     old_rankings = {b.id: b.rank for b in old_bids}
 
-    # ── 2. recalculate rankings including the new bid ─────────────────
+    # 2. recalculate rankings with the new bid included
     recalculate_rankings(db, rfq.id)
 
     # reload to get updated ranks
@@ -90,7 +90,7 @@ def process_new_bid(db: Session, rfq: RFQ, new_bid: Bid):
     )
     new_l1_id = all_bids[0].id if all_bids else None
 
-    # ── 3. log the bid submission ─────────────────────────────────────
+    # 3. log the bid submission
     db.add(ActivityLog(
         rfq_id=rfq.id,
         event_type="bid_submitted",
@@ -103,15 +103,15 @@ def process_new_bid(db: Session, rfq: RFQ, new_bid: Bid):
         bid_id=new_bid.id,
     ))
 
-    # ── 4. check if we are inside the trigger window ──────────────────
+    # 4. check if bid arrived within the trigger window
     window_start = rfq.current_close_time - timedelta(minutes=rfq.trigger_window_minutes)
     in_trigger_window = window_start <= now <= rfq.current_close_time
 
     if not in_trigger_window:
         db.commit()
-        return  # nothing to extend
+        return
 
-    # ── 5. evaluate the configured trigger condition ──────────────────
+    # 5. check trigger condition
     should_extend = False
     reason = ""
 
@@ -120,7 +120,7 @@ def process_new_bid(db: Session, rfq: RFQ, new_bid: Bid):
         reason = f"Bid received from {new_bid.carrier_name} during trigger window"
 
     elif rfq.trigger_type == TriggerType.ANY_RANK_CHANGE:
-        # check whether any existing supplier's rank shifted
+        # check if any existing supplier's rank shifted
         rank_changed = False
         for bid in all_bids:
             if bid.id == new_bid.id:
@@ -129,11 +129,9 @@ def process_new_bid(db: Session, rfq: RFQ, new_bid: Bid):
             if prev_rank is not None and prev_rank != bid.rank:
                 rank_changed = True
                 break
-        # a brand-new bid entering also counts as a ranking change
         if not old_bids:
-            rank_changed = False  # first bid ever, no prior ranking existed
+            rank_changed = False
         elif new_bid.id not in old_rankings:
-            # new entrant — rankings shifted if it didn't land last
             if new_bid.rank < len(all_bids):
                 rank_changed = True
 
@@ -151,7 +149,7 @@ def process_new_bid(db: Session, rfq: RFQ, new_bid: Bid):
                 f"Lowest bidder (L1) changed from {old_l1_name} to {new_l1_name}"
             )
 
-    # ── 6. extend the clock if triggered ──────────────────────────────
+    # 6. extend auction deadline (capped at forced close time)
     if should_extend:
         proposed_close = rfq.current_close_time + timedelta(
             minutes=rfq.extension_duration_minutes

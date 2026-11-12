@@ -1,7 +1,4 @@
-/* ══════════════════════════════════════════════════════════════
-   RFQ British Auction — Stylesheet
-   Clean, minimal design.  No frameworks, just plain CSS.
-   ══════════════════════════════════════════════════════════════ */
+/* RFQ British Auction Styles */
 
 * {
   margin: 0;
@@ -17,7 +14,7 @@ body {
   line-height: 1.6;
 }
 
-/* ── Header / Nav ─────────────────────────────────────────── */
+/* Navigation */
 
 .app-header {
   background: #1e293b;
@@ -47,7 +44,7 @@ body {
   color: #fff;
 }
 
-/* ── Main content area ─────────────────────────────────────── */
+/* Layout */
 
 .main-content {
   max-width: 1100px;
@@ -55,7 +52,7 @@ body {
   padding: 0 1.5rem;
 }
 
-/* ── Page header (title + button row) ──────────────────────── */
+/* Page header */
 
 .page-header {
   display: flex;
@@ -64,7 +61,7 @@ body {
   margin-bottom: 1.5rem;
 }
 
-/* ── Buttons ───────────────────────────────────────────────── */
+/* Buttons */
 
 .btn-primary {
   background: #2563eb;
@@ -96,7 +93,7 @@ body {
   text-decoration: underline;
 }
 
-/* ── Tables ────────────────────────────────────────────────── */
+/* Tables */
 
 .table-wrapper {
   overflow-x: auto;
@@ -138,7 +135,7 @@ tbody tr:hover {
   background: #f0fdf4;
 }
 
-/* ── Status badge ──────────────────────────────────────────── */
+/* Status badges */
 
 .status-badge {
   display: inline-block;
@@ -155,7 +152,7 @@ tbody tr:hover {
   padding: 0.3rem 1rem;
 }
 
-/* ── Rank badge ────────────────────────────────────────────── */
+/* Rank badges */
 
 .rank-badge {
   display: inline-block;
@@ -173,7 +170,7 @@ tbody tr:hover {
   color: #92400e;
 }
 
-/* ── Forms ──────────────────────────────────────────────────── */
+/* Forms */
 
 .form-container {
   max-width: 720px;
@@ -243,7 +240,7 @@ tbody tr:hover {
   margin-top: 0.25rem;
 }
 
-/* ── Error / Success boxes ─────────────────────────────────── */
+/* Alerts & feedback */
 
 .error-box {
   background: #fef2f2;
@@ -265,7 +262,7 @@ tbody tr:hover {
   margin-bottom: 1rem;
 }
 
-/* ── Loading / empty states ────────────────────────────────── */
+/* Loading & empty states */
 
 .loading {
   text-align: center;
@@ -287,7 +284,7 @@ tbody tr:hover {
   font-style: italic;
 }
 
-/* ── Detail page ───────────────────────────────────────────── */
+/* Detail page layout */
 
 .detail-page {
   max-width: 1000px;
@@ -344,7 +341,7 @@ tbody tr:hover {
   font-weight: 600;
 }
 
-/* ── Sections ──────────────────────────────────────────────── */
+/* Section cards */
 
 .section {
   margin-bottom: 1.5rem;
@@ -355,7 +352,7 @@ tbody tr:hover {
   color: #1e293b;
 }
 
-/* ── Bid form on detail page ───────────────────────────────── */
+/* Bid submission form */
 
 .bid-form-section {
   background: #fff;
@@ -370,7 +367,7 @@ tbody tr:hover {
   color: #334155;
 }
 
-/* ── Activity log ──────────────────────────────────────────── */
+/* Activity log */
 
 .activity-log {
   background: #fff;
@@ -428,7 +425,7 @@ tbody tr:hover {
   background: #fffbeb;
 }
 
-/* ── Responsive ────────────────────────────────────────────── */
+/* Mobile responsiveness */
 
 @media (max-width: 700px) {
   .form-grid,

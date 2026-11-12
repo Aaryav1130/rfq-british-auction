@@ -4,12 +4,12 @@ from typing import Optional, List
 from pydantic import BaseModel, field_validator
 
 
-# ── Trigger type as plain string enum for pydantic ────────────────────────
+# Valid trigger types and statuses
 TRIGGER_TYPES = ["bid_received", "any_rank_change", "l1_rank_change"]
 AUCTION_STATUSES = ["active", "closed", "force_closed"]
 
 
-# ── RFQ Schemas ───────────────────────────────────────────────────────────
+# RFQ schemas
 
 class RFQCreate(BaseModel):
     name: str
@@ -64,7 +64,7 @@ class RFQResponse(BaseModel):
     model_config = {"from_attributes": True}
 
 
-# ── Bid Schemas ───────────────────────────────────────────────────────────
+# Bid schemas
 
 class BidCreate(BaseModel):
     carrier_name: str
@@ -98,7 +98,7 @@ class BidResponse(BaseModel):
     model_config = {"from_attributes": True}
 
 
-# ── Activity Log Schema ──────────────────────────────────────────────────
+# Activity log
 
 class ActivityLogResponse(BaseModel):
     id: int
@@ -111,7 +111,7 @@ class ActivityLogResponse(BaseModel):
     model_config = {"from_attributes": True}
 
 
-# ── Combined detail response ─────────────────────────────────────────────
+# Full auction detail response
 
 class AuctionDetailResponse(BaseModel):
     rfq: RFQResponse

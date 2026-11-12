@@ -43,7 +43,7 @@ Suppliers compete by submitting bids on RFQs. If bidding activity occurs near th
 │   ├── services/
 │   │   └── auction.py           # British Auction extension engine
 │   ├── requirements.txt
-│   └── .env                     # DB connection string
+│   └── .env.example             # Template for local environment vars
 ├── frontend/
 │   ├── public/index.html
 │   ├── src/
@@ -81,10 +81,15 @@ Create the database in PostgreSQL:
 CREATE DATABASE rfq_auction;
 ```
 
-If your PostgreSQL credentials differ from the defaults (`postgres:postgres`), update `backend/.env`:
+Copy `.env.example` to `.env` and set your PostgreSQL connection string:
+
+```bash
+# inside backend/
+cp .env.example .env    # On Windows: copy .env.example .env
+```
 
 ```
-DATABASE_URL=postgresql://your_user:your_password@localhost:5432/rfq_auction
+DATABASE_URL=postgresql+psycopg2://postgres:yourpassword@localhost:5432/rfq_auction
 ```
 
 ### 2. Backend Setup

@@ -6,7 +6,7 @@ const API = axios.create({
   baseURL: API_BASE_URL,
 });
 
-// ── RFQ endpoints ────────────────────────────────────────────────────────
+// RFQ APIs
 
 export function createRFQ(data) {
   return API.post("/rfqs", data);
@@ -20,7 +20,7 @@ export function fetchRFQDetail(id) {
   return API.get(`/rfqs/${id}`);
 }
 
-// ── Bid endpoints ────────────────────────────────────────────────────────
+// Bid APIs
 
 export function submitBid(rfqId, data) {
   return API.post(`/rfqs/${rfqId}/bids`, data);

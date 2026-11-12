@@ -1,8 +1,11 @@
+import os
 import sys
 from datetime import datetime, timedelta, timezone
 from fastapi.testclient import TestClient
 
-sys.path.append("D:\\British Auction\\backend")
+# make sure our backend package is on the path
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+
 from main import app
 from database import SessionLocal
 from models import RFQ, Bid, ActivityLog
@@ -15,7 +18,7 @@ def test_full_auction_lifecycle():
     assert res.status_code == 200, f"Root failed: {res.text}"
     print("Root API is healthy:", res.json())
 
-    print("\n--- 2. Testing RFQ Creation with British Auction Config ---")
+    print("\n--- 2. Creating RFQ with British Auction Config ---")
     now = datetime.now(timezone.utc)
     bid_start = now - timedelta(minutes=5)
     bid_close = now + timedelta(minutes=5)
@@ -38,12 +41,12 @@ def test_full_auction_lifecycle():
     assert res.status_code == 201, f"Create RFQ failed: {res.text}"
     rfq_data = res.json()
     rfq_id = rfq_data["id"]
-    print(f"Created RFQ #{rfq_id} successfully, initial status: {rfq_data['status']}")
-    print(f"Initial Bid Close: {rfq_data['bid_close_time']}")
-    print(f"Current Close: {rfq_data['current_close_time']}")
+    print(f"Created RFQ #{rfq_id}, status: {rfq_data['status']}")
+    print(f"Bid Close: {rfq_data['bid_close_time']}")
     print(f"Forced Close: {rfq_data['forced_close_time']}")
 
-    print("\n--- 3. Testing Bid 1 Submission (Carrier A - ₹50,000) ---")
+    # -- Bid 1: DHL at 50k (becomes L1 since its the only one)
+    print("\n--- 3. Bid 1 (DHL - 50,000) ---")
     bid1_payload = {
         "carrier_name": "DHL Global Forwarding",
         "freight_charges": 40000.0,
@@ -55,10 +58,11 @@ def test_full_auction_lifecycle():
     res = client.post(f"/api/rfqs/{rfq_id}/bids", json=bid1_payload)
     assert res.status_code == 201, f"Bid 1 failed: {res.text}"
     bid1 = res.json()
-    print(f"Bid 1 submitted: Total = ₹{bid1['total_price']}, Rank = L{bid1['rank']}")
+    print(f"Total = {bid1['total_price']}, Rank = L{bid1['rank']}")
     assert bid1["rank"] == 1, "First bid must be L1"
 
-    print("\n--- 4. Testing Bid 2 Submission (Carrier B - Higher ₹55,000, No L1 change) ---")
+    # -- Bid 2: Maersk at 55k, higher so L1 should NOT change
+    print("\n--- 4. Bid 2 (Maersk - 55,000, no L1 change expected) ---")
     bid2_payload = {
         "carrier_name": "Maersk Logistics",
         "freight_charges": 45000.0,
@@ -70,16 +74,18 @@ def test_full_auction_lifecycle():
     res = client.post(f"/api/rfqs/{rfq_id}/bids", json=bid2_payload)
     assert res.status_code == 201, f"Bid 2 failed: {res.text}"
     bid2 = res.json()
-    print(f"Bid 2 submitted: Total = ₹{bid2['total_price']}, Rank = L{bid2['rank']}")
-    assert bid2["rank"] == 2, "Second bid should be L2"
+    print(f"Total = {bid2['total_price']}, Rank = L{bid2['rank']}")
+    assert bid2["rank"] == 2
 
-    # Detail check: Close time should NOT have extended because trigger_type is l1_rank_change and L1 did not change
+    # close time should stay the same (no L1 change)
     res = client.get(f"/api/rfqs/{rfq_id}")
     detail = res.json()
     print(f"Close time after higher bid: {detail['rfq']['current_close_time']}")
-    assert detail['rfq']['current_close_time'] == rfq_data['current_close_time'], "Should not extend when L1 didn't change"
+    assert detail['rfq']['current_close_time'] == rfq_data['current_close_time'], \
+        "Should not extend when L1 didn't change"
 
-    print("\n--- 5. Testing Bid 3 Submission (Carrier C - Lower ₹45,000, L1 CHANGES!) ---")
+    # -- Bid 3: BlueDart at 45k, should become new L1 and trigger extension
+    print("\n--- 5. Bid 3 (BlueDart - 45,000, L1 CHANGES) ---")
     bid3_payload = {
         "carrier_name": "BlueDart Express",
         "freight_charges": 35000.0,
@@ -91,34 +97,34 @@ def test_full_auction_lifecycle():
     res = client.post(f"/api/rfqs/{rfq_id}/bids", json=bid3_payload)
     assert res.status_code == 201, f"Bid 3 failed: {res.text}"
     bid3 = res.json()
-    print(f"Bid 3 submitted: Total = ₹{bid3['total_price']}, Rank = L{bid3['rank']}")
-    assert bid3["rank"] == 1, "Third bid must become the new L1"
+    print(f"Total = {bid3['total_price']}, Rank = L{bid3['rank']}")
+    assert bid3["rank"] == 1, "BlueDart should be new L1"
 
-    # Now verify extension happened
+    # verify the extension actually happened
     res = client.get(f"/api/rfqs/{rfq_id}")
     detail = res.json()
     extended_close = datetime.fromisoformat(detail['rfq']['current_close_time'])
     original_close = datetime.fromisoformat(rfq_data['current_close_time'])
     print(f"Original Close: {original_close}")
-    print(f"New Extended Close: {extended_close}")
-    assert extended_close > original_close, "Auction close time must have been extended!"
-    print("EXTENSION SUCCESSFUL! Time extended by 5 minutes due to L1 change.")
+    print(f"Extended Close: {extended_close}")
+    assert extended_close > original_close, "Close time must have been extended!"
+    print("EXTENSION WORKED")
 
-    print("\n--- 6. Testing Activity Logs ---")
+    # -- Check activity logs
+    print("\n--- 6. Activity Logs ---")
     logs = detail["activity_logs"]
-    print(f"Total activity logs recorded: {len(logs)}")
+    print(f"Total logs: {len(logs)}")
     for log in logs:
         print(f"  [{log['event_type']}] {log['description']}")
     
-    assert any(l["event_type"] == "time_extended" for l in logs), "time_extended event must be logged"
-    assert any(l["event_type"] == "bid_submitted" for l in logs), "bid_submitted event must be logged"
+    assert any(l["event_type"] == "time_extended" for l in logs), "Missing time_extended log"
+    assert any(l["event_type"] == "bid_submitted" for l in logs), "Missing bid_submitted log"
 
-    print("\n--- 7. Testing Validation: Forced Close Ceiling ---")
-    # For Bid 4 to be inside the trigger window:
-    # Trigger window is 10 mins. So current_close must be within 10 minutes from now.
-    # We set current_close to now + 3 minutes, and forced_close to now + 5 minutes.
-    # Since extension_duration is 5 minutes, proposed_close = now + 8 minutes > forced_close (now + 5 minutes).
-    # Therefore, new_close must be capped exactly at forced_close!
+    # -- Forced close ceiling test
+    # Set current_close to now+3min, forced to now+5min.
+    # Extension of 5min would push to now+8min which exceeds forced.
+    # So it should cap at forced_close.
+    print("\n--- 7. Forced Close Ceiling ---")
     test_now = datetime.now(timezone.utc)
     db = SessionLocal()
     rfq_obj = db.query(RFQ).filter(RFQ.id == rfq_id).first()
@@ -128,7 +134,6 @@ def test_full_auction_lifecycle():
     target_forced = rfq_obj.forced_close_time
     db.close()
 
-    # Submit another winning bid (₹40,000) inside trigger window
     bid4_payload = {
         "carrier_name": "FedEx Supply Chain",
         "freight_charges": 30000.0,
@@ -144,15 +149,13 @@ def test_full_auction_lifecycle():
     detail = res.json()
     cur_close = datetime.fromisoformat(detail['rfq']['current_close_time'])
     forced = datetime.fromisoformat(detail['rfq']['forced_close_time'])
-    print(f"Current Close after near-forced extension: {cur_close}")
+    print(f"Current Close: {cur_close}")
     print(f"Forced Close: {forced}")
-    assert cur_close <= forced, "Auction current_close_time must NEVER exceed forced_close_time!"
-    assert cur_close == forced, "Auction should be capped exactly at forced_close_time!"
-    print("FORCED CLOSE CEILING VERIFIED: Successfully capped at forced_close_time without exceeding it!")
+    assert cur_close <= forced, "current_close must NEVER exceed forced_close!"
+    assert cur_close == forced, "Should be capped exactly at forced_close"
+    print("FORCED CLOSE CEILING VERIFIED")
 
-    print("\n=============================================")
-    print("ALL TESTS PASSED! THE AUCTION SYSTEM WORKS END-TO-END.")
-    print("=============================================")
+    print("\n=== ALL TESTS PASSED ===")
 
 if __name__ == "__main__":
     test_full_auction_lifecycle()

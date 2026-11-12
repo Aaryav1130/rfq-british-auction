@@ -94,7 +94,7 @@ def get_rfq_detail(rfq_id: int, db: Session = Depends(get_db)):
     )
 
 
-# ── helper ────────────────────────────────────────────────────────────────
+# Helper to attach lowest bid to response
 
 def _rfq_to_response(db: Session, rfq: RFQ) -> RFQResponse:
     """Build an RFQResponse including the current lowest bid amount."""
